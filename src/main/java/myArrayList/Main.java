@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        StringList myArray = new StringListImpl(10);
+        StringList myArray = new StringListImpl(5);
         StringList myArray2 = new StringListImpl(10);
 
         List<String> myList = new ArrayList<>(10);
@@ -21,8 +21,10 @@ public class Main {
         System.out.println(myArray2.add("AAA"));
         System.out.println(myArray2.add("BBB"));
         System.out.println(myArray2.add("CCC"));
-//        System.out.println(myArray.remove("CCC"));
-//        System.out.println(myArray.size());
+
+        System.out.println("Then remove " + myArray.size());
+        System.out.println(myArray.remove("CCC"));
+        System.out.println("After remove " + myArray.size());
 
         System.out.println("contains " + myArray.contains("CCC"));
         System.out.println("index of " + myArray.indexOf("CCC"));

@@ -49,6 +49,7 @@ public class StringListImpl implements StringList {
             return storage = new String[Math.max(DEFAULT_CAPACITY, minGrowth)];
         }
     }
+
 //  вычитывает новый размер массива
     private int newLength(int oldCapacity, int minGrowth) {
         int prefCapacity = (oldCapacity * 3) / 2 + 1;
@@ -97,7 +98,7 @@ public class StringListImpl implements StringList {
 
         storage[size] = item;
         size += 1;
-        return item;
+        return storage[size - 1];
     }
 
     @Override
@@ -132,6 +133,8 @@ public class StringListImpl implements StringList {
 //    Находить индекс элемента и вызывает метод removeElement
     @Override
     public String remove(String item) {
+        validateItem(item);
+
         int index = SearchIndexOfElement(item, 0, size);
 
         if (index >= 0) {
@@ -146,6 +149,12 @@ public class StringListImpl implements StringList {
 //    вызывает метод removeElement для удаления элемента
     @Override
     public String remove(int index) {
+        checkRangeIndex(index);
+
+        if (storage[index] == null) {
+            throw new ElementNotFoundException("Элемент не найден");
+        }
+
         return removeElement(storage, index);
     }
 
@@ -159,17 +168,22 @@ public class StringListImpl implements StringList {
 
     @Override
     public int indexOf(String item) {
+        validateItem(item);
+
         return SearchIndexOfElement(item, 0, size);
     }
 
     @Override
     public int lastIndexOf(String item) {
+        validateItem(item);
+
         return SearchIndexOfElement(item, size, 0);
     }
 
     @Override
     public String get(int index) {
         checkRangeIndex(index);
+
         if (storage[index] != null) {
             return storage[index];
         }
@@ -232,7 +246,7 @@ public class StringListImpl implements StringList {
 
 //    Выбрасывает исключение если index выходить за приделы массива
     private void checkRangeIndex(int index) {
-        if (index > storage.length) {
+        if (index > size) {
             throw new ExitStorageLengthException("Индекс выходит за пределы фактической длины массива");
         } else if (index < 0) {
             throw new ExitStorageLengthException("Индекс меньше нуля");
