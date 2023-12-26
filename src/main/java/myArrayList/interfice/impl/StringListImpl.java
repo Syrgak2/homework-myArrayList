@@ -57,19 +57,6 @@ public class StringListImpl implements StringList {
         return Math.max(prefCapacity, minCapacity);
     }
 
-    //    Находить индекс элемента массива
-//    Может искать с начала или конца массива
-//    В зависимости переданных значений
-    private int SearchIndexOfElement(String e, int start, int end) {
-        String[] strings = storage;
-        int i = 0;
-        for (; i < size; i++) {
-            if (e.equals(strings[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
     //  Метод для удаления элемента по индексу
     private String removeElement(String[] array, int i) {
@@ -125,7 +112,8 @@ public class StringListImpl implements StringList {
         validateItem(item);
         checkRangeIndex(index);
 
-        return storage[index] = item;
+        storage[index] = item;
+        return storage[index];
     }
 
 
@@ -135,7 +123,7 @@ public class StringListImpl implements StringList {
     public String remove(String item) {
         validateItem(item);
 
-        int index = SearchIndexOfElement(item, 0, size);
+        int index = indexOf(item);
 
         if (index >= 0) {
             return removeElement(storage, index);
@@ -151,10 +139,6 @@ public class StringListImpl implements StringList {
     public String remove(int index) {
         checkRangeIndex(index);
 
-        if (storage[index] == null) {
-            throw new ElementNotFoundException("Элемент не найден");
-        }
-
         return removeElement(storage, index);
     }
 
@@ -162,7 +146,7 @@ public class StringListImpl implements StringList {
     public boolean contains(String item) {
         validateItem(item);
 
-        return SearchIndexOfElement(item, 0, size) >= 0;
+        return indexOf(item) >= 0;
 
     }
 
@@ -170,14 +154,27 @@ public class StringListImpl implements StringList {
     public int indexOf(String item) {
         validateItem(item);
 
-        return SearchIndexOfElement(item, 0, size);
+        for (int i = 0; i < size; i++) {
+            if (storage[i].equals(item)) {
+                return i;
+            }
+        }
+
+        return -1;
+
     }
 
     @Override
     public int lastIndexOf(String item) {
         validateItem(item);
 
-        return SearchIndexOfElement(item, size, 0);
+        for (int i = size - 1; i >=0; i--) {
+            if (storage[i].equals(item)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -187,6 +184,7 @@ public class StringListImpl implements StringList {
         if (storage[index] != null) {
             return storage[index];
         }
+
         throw new ElementNotFoundException("Объект не найден");
     }
 
@@ -225,10 +223,8 @@ public class StringListImpl implements StringList {
 
     @Override
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
         size = 0;
+        storage = new String[DEFAULT_CAPACITY];
     }
 
     @Override

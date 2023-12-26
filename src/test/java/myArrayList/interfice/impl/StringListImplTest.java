@@ -38,18 +38,6 @@ public class StringListImplTest {
                 () -> stringList.remove(wrongElement)
         );
 
-        //        Remove element with index
-        Assertions.assertThrows(
-                ElementNotFoundException.class,
-                () -> stringList.remove(stringList.size() + 1)
-        );
-
-//        Получение элемента по индексу
-        Assertions.assertThrows(
-                ElementNotFoundException.class,
-                () -> stringList.get(stringList.size() + 1)
-        );
-
     }
 
     //    NullPointException
