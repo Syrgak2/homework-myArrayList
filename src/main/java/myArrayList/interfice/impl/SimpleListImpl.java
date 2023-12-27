@@ -241,6 +241,43 @@ public class SimpleListImpl<E> implements SimpleList<E> {
         return tmp;
     }
 
+    private Integer[] sort(Integer[] array) {
+        for (int i = 0; i < array.length - 1; i++) {
+            int minElementIndex = i;
+            for (int j = i + 1; j < array.length; j++) {
+                if (array[j] < array[minElementIndex]) {
+                    minElementIndex = j;
+                }
+            }
+
+            int tmp = array[i];
+            array[i] = array[minElementIndex];
+            array[minElementIndex] = tmp;
+        }
+        return array;
+    }
+
+
+    private int binarySearch(Integer[] arr, int item) {
+        int min = 0;
+        int max = arr.length - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (item == arr[mid]) {
+                return mid;
+            }
+
+            if (item < arr[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return -1;
+    }
+
 
 //    Выбрасывает исключение если передан пустой item
     private void validateItem(E item) {
