@@ -3,44 +3,47 @@ package myArrayList.interfice.impl;
 import myArrayList.exception.ElementNotFoundException;
 import myArrayList.exception.ExitStorageLengthException;
 import myArrayList.exception.NullPointException;
-import myArrayList.interfice.StringList;
+import myArrayList.interfice.SimpleList;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class StringListImpl implements StringList {
+public class SimpleListImpl<E> implements SimpleList<E> {
 
-    List<String> test = new ArrayList<>();
-    private String[] storage;
+    private Object[] storage;
     private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
 
-    public StringListImpl(int initCapacity) {
+    public SimpleListImpl(int initCapacity) {
         if (initCapacity > 0) {
-            this.storage = new String[initCapacity];
+            this.storage = new Object[initCapacity];
         } else if (initCapacity == 0) {
-            this.storage = new String[DEFAULT_CAPACITY];
+            this.storage = new Object[DEFAULT_CAPACITY];
         } else {
             throw new IllegalArgumentException("передан не правильный размер " + initCapacity);
         }
     }
 
-    public StringListImpl(String[] storage) {
+    public SimpleListImpl(String[] storage) {
         if ((size = storage.length) != 0) {
             this.storage = storage;
         } else {
-            this.storage = new String[DEFAULT_CAPACITY];
+            this.storage = new Object[DEFAULT_CAPACITY];
         }
     }
 
-    public StringListImpl() {
+    public SimpleListImpl() {
         this.storage = new String[DEFAULT_CAPACITY];
     }
 
 
+    @SuppressWarnings("unchecked")
+    private E getElementInE(int index) {
+        return (E) storage[index];
+    }
+
+
 //    увеличивает размер массива
-    private String[] grow(int minGrowth) {
+    private Object[] grow(int minGrowth) {
         int oldCapacity = storage.length;
         if (oldCapacity > 0) {
             int newCapacity = newLength(oldCapacity, minGrowth);
@@ -59,10 +62,12 @@ public class StringListImpl implements StringList {
 
 
     //  Метод для удаления элемента по индексу
-    private String removeElement(String[] array, int i) {
+//    Возвращает удаленный элемент
+    private E removeElement(Object[] array, int i) {
         int newSize = size - 1;
 
-        String oldValue = array[i];
+        @SuppressWarnings("unchecked")
+        E oldValue = (E)array[i];
 
         if (newSize > i) {
             System.arraycopy(array, i + 1, array, i, newSize - i);
@@ -75,8 +80,9 @@ public class StringListImpl implements StringList {
     }
 
 
+
     @Override
-    public String add(String item) {
+    public E add(E item) {
         validateItem(item);
 
         if (size == storage.length) {
@@ -85,16 +91,16 @@ public class StringListImpl implements StringList {
 
         storage[size] = item;
         size += 1;
-        return storage[size - 1];
+        return item;
     }
 
     @Override
-    public String add(int index, String item) {
+    public E add(int index, E    item) {
         checkRangeIndex(index);
         validateItem(item);
 
         final int s = size;
-        String[] storage = this.storage;
+        Object[] storage = this.storage;
 
         if (index == s) {
             add(item);
@@ -104,23 +110,23 @@ public class StringListImpl implements StringList {
         storage[index] = item;
         size = s + 1;
 
-        return storage[index];
+        return getElementInE(index);
     }
 
     @Override
-    public String set(int index, String item) {
+    public E set(int index, E item) {
         validateItem(item);
         checkRangeIndex(index);
 
         storage[index] = item;
-        return storage[index];
+        return getElementInE(index);
     }
 
 
 //    Метод для удаления элемента
 //    Находить индекс элемента и вызывает метод removeElement
     @Override
-    public String remove(String item) {
+    public E remove(E item) {
         validateItem(item);
 
         int index = indexOf(item);
@@ -133,17 +139,18 @@ public class StringListImpl implements StringList {
 
     }
 
+
     //    Метод для удаления элемента
 //    вызывает метод removeElement для удаления элемента
     @Override
-    public String remove(int index) {
+    public E remove(int index) {
         checkRangeIndex(index);
 
         return removeElement(storage, index);
     }
 
     @Override
-    public boolean contains(String item) {
+    public boolean contains(E item) {
         validateItem(item);
 
         return indexOf(item) >= 0;
@@ -151,7 +158,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public int indexOf(String item) {
+    public int indexOf(E item) {
         validateItem(item);
 
         for (int i = 0; i < size; i++) {
@@ -165,7 +172,7 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(E item) {
         validateItem(item);
 
         for (int i = size - 1; i >=0; i--) {
@@ -178,23 +185,23 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String get(int index) {
+    public E get(int index) {
         checkRangeIndex(index);
 
         if (storage[index] != null) {
-            return storage[index];
+            return getElementInE(index);
         }
 
         throw new ElementNotFoundException("Объект не найден");
     }
 
     @Override
-    public boolean equals(StringList otherList) {
+    public boolean equals(SimpleList<E> otherList) {
         if (otherList == null) {
             throw new NullPointException("Передан Null");
         }
 
-        String[] otherStorage = otherList.toArray();
+        Object[] otherStorage = otherList.toArray();
 
         if (otherList == this) {
             return true;
@@ -228,13 +235,15 @@ public class StringListImpl implements StringList {
     }
 
     @Override
-    public String[] toArray() {
-        return Arrays.copyOf(storage, size);
+    public E[] toArray() {
+        @SuppressWarnings("unchecked")
+        E[] tmp = (E[]) Arrays.copyOf(storage, size);
+        return tmp;
     }
 
 
 //    Выбрасывает исключение если передан пустой item
-    private void validateItem(String item) {
+    private void validateItem(E item) {
         if (item == null) {
             throw new NullPointException("Передан пустой объект");
         }

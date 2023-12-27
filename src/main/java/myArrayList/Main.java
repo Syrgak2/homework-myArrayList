@@ -1,16 +1,15 @@
 package myArrayList;
 
-import myArrayList.interfice.StringList;
-import myArrayList.interfice.impl.StringListImpl;
+import myArrayList.interfice.SimpleList;
+import myArrayList.interfice.impl.SimpleListImpl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        StringList myArray = new StringListImpl(5);
-        StringList myArray2 = new StringListImpl(10);
+        SimpleList<String> myArray = new SimpleListImpl<>(5);
+        SimpleList<String> myArray2 = new SimpleListImpl<>(10);
 
         List<String> myList = new ArrayList<>(10);
 
@@ -37,8 +36,7 @@ public class Main {
         myArray.clear();
         System.out.println("After clear" + myArray.get(1));
 
-        StringList myArray3 = new StringListImpl(myArray.toArray());
+        SimpleList<String> myArray3 = new SimpleListImpl<>( myArray.toArray());
         System.out.println("myArray3 = " + myArray3.size());
-
     }
 }
