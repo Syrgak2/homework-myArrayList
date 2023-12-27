@@ -21,6 +21,7 @@ public class Main {
         System.out.println(myArray2.add("AAA"));
         System.out.println(myArray2.add("BBB"));
         System.out.println(myArray2.add("CCC"));
+        System.out.println("myArray2.indexOf(\"BBB\") = " + myArray2.indexOf("BBB"));
 
         System.out.println("Then remove " + myArray.size());
         System.out.println(myArray.remove("CCC"));

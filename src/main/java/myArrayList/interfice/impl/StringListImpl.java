@@ -242,10 +242,8 @@ public class StringListImpl implements StringList {
 
 //    Выбрасывает исключение если index выходить за приделы массива
     private void checkRangeIndex(int index) {
-        if (index > size) {
-            throw new ExitStorageLengthException("Индекс выходит за пределы фактической длины массива");
-        } else if (index < 0) {
-            throw new ExitStorageLengthException("Индекс меньше нуля");
+        if (index > size || index < 0) {
+            throw new ExitStorageLengthException("Индекс выходит за пределы фактической длины массива или элемент не найден");
         }
     }
 
