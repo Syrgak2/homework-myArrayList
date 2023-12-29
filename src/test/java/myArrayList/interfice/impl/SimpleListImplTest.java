@@ -3,13 +3,13 @@ package myArrayList.interfice.impl;
 import myArrayList.exception.ElementNotFoundException;
 import myArrayList.exception.ExitStorageLengthException;
 import myArrayList.exception.NullPointException;
-import myArrayList.interfice.StringList;
+import myArrayList.interfice.SimpleList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class StringListImplTest {
-    private StringList stringList;
+public class SimpleListImplTest {
+    private SimpleList<String> simpleList;
 
     private String testValue;
     private String testValue1;
@@ -17,9 +17,9 @@ public class StringListImplTest {
 
     @BeforeEach
     public void setUp() {
-        stringList = new StringListImpl();
-        testValue1 = stringList.add("Test value");
-        testValue2 = stringList.add("Test value 1");
+        simpleList = new SimpleListImpl<>();
+        testValue1 = simpleList.add("Test value");
+        testValue2 = simpleList.add("Test value 1");
         testValue = "Car";
     }
 
@@ -35,7 +35,7 @@ public class StringListImplTest {
 //        Remove element with item
         Assertions.assertThrows(
                 ElementNotFoundException.class,
-                () -> stringList.remove(wrongElement)
+                () -> simpleList.remove(wrongElement)
         );
 
     }
@@ -45,53 +45,53 @@ public class StringListImplTest {
     public void whenGivenNull() {
 //        Given
         String testNull = null;
-        StringList testList = null;
+        SimpleList<String> testList = null;
 
 //        Add
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.add(testNull)
+                () -> simpleList.add(testNull)
         );
 
 //        Add with index
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.add(0, testNull)
+                () -> simpleList.add(0, testNull)
         );
 
 //        Set
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.set(0, testNull)
+                () -> simpleList.set(0, testNull)
         );
 
 //        remove
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.remove(testNull)
+                () -> simpleList.remove(testNull)
         );
 
 //        contains
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.contains(testNull)
+                () -> simpleList.contains(testNull)
         );
 
 //        indexOf
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.indexOf(testNull)
+                () -> simpleList.indexOf(testNull)
         );
 
 //        lastIndexOf
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.lastIndexOf(testNull)
+                () -> simpleList.lastIndexOf(testNull)
         );
 
         Assertions.assertThrows(
                 NullPointException.class,
-                () -> stringList.equals(testList)
+                () -> simpleList.equals(testList)
         );
     }
 
@@ -104,25 +104,25 @@ public class StringListImplTest {
 //        Add with index
         Assertions.assertThrows(
                 ExitStorageLengthException.class,
-                () -> stringList.add(stringList.size() + 3, testValue)
+                () -> simpleList.add(simpleList.size() + 3, testValue)
         );
 
 //        set
         Assertions.assertThrows(
                 ExitStorageLengthException.class,
-                () -> stringList.set(index, testValue)
+                () -> simpleList.set(index, testValue)
         );
 
 //        remove with index
         Assertions.assertThrows(
                 ExitStorageLengthException.class,
-                () -> stringList.remove(index)
+                () -> simpleList.remove(index)
         );
 
 //        get
         Assertions.assertThrows(
                 ExitStorageLengthException.class,
-                () -> stringList.get(index)
+                () -> simpleList.get(index)
         );
     }
 
@@ -132,7 +132,7 @@ public class StringListImplTest {
         String excepted = testValue;
 
 //        When
-        String actual = stringList.add(testValue);
+        String actual = simpleList.add(testValue);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -144,7 +144,7 @@ public class StringListImplTest {
         String excepted = testValue;
 
 //        When
-        String actual = stringList.add(1, testValue);
+        String actual = simpleList.add(1, testValue);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -154,10 +154,10 @@ public class StringListImplTest {
     public void removeElement() {
 //        Given
         String excepted = testValue;
-        stringList.add(testValue);
+        simpleList.add(testValue);
 
 //        When
-        String actual = stringList.remove(testValue);
+        String actual = simpleList.remove(testValue);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -166,10 +166,10 @@ public class StringListImplTest {
     @Test
     public void removeElementOfIndex() {
 //        Given
-        String excepted = stringList.add(testValue);
+        String excepted = simpleList.add(testValue);
 
 //        When
-        String actual = stringList.remove(stringList.indexOf(testValue));
+        String actual = simpleList.remove(simpleList.indexOf(testValue));
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -180,10 +180,10 @@ public class StringListImplTest {
     public void containsElement() {
 //        Given
         Boolean excepted = true;
-        stringList.add(testValue);
+        simpleList.add(testValue);
 
 //        When
-        Boolean actual = stringList.contains(testValue);
+        Boolean actual = simpleList.contains(testValue);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -192,11 +192,11 @@ public class StringListImplTest {
     @Test
     public void indexOfElement() {
 //        Given
-        int excepted = stringList.size();
-        stringList.add(testValue);
+        int excepted = simpleList.size();
+        simpleList.add(testValue);
 
 //        When
-        int actual = stringList.indexOf(testValue);
+        int actual = simpleList.indexOf(testValue);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -206,10 +206,10 @@ public class StringListImplTest {
     public void searchFromLastIndex() {
 //        Given
         int excepted = 0;
-        stringList.add(excepted, testValue);
+        simpleList.add(excepted, testValue);
 
 //        When
-        int actual = stringList.lastIndexOf(testValue);
+        int actual = simpleList.lastIndexOf(testValue);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -219,10 +219,10 @@ public class StringListImplTest {
     public void getElement() {
 //        Given
         int index = 0;
-        String excepted = stringList.add(index, testValue);
+        String excepted = simpleList.add(index, testValue);
 
 //        When
-        String actual = stringList.get(index);
+        String actual = simpleList.get(index);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -232,12 +232,12 @@ public class StringListImplTest {
     public void equalsList() {
 //        Given
         boolean excepted = true;
-        StringList testList = new StringListImpl();
+        SimpleList<String> testList = new SimpleListImpl<>();
         testList.add(testValue1);
         testList.add(testValue2);
 
 //        When
-        boolean actual = stringList.equals(testList);
+        boolean actual = simpleList.equals(testList);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
@@ -249,7 +249,7 @@ public class StringListImplTest {
         int excepted = 2;
 
 //        When
-        int actual = stringList.size();
+        int actual = simpleList.size();
 
 //        Then
         Assertions.assertEquals(excepted, actual);
