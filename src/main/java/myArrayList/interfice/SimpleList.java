@@ -39,6 +39,8 @@ public interface SimpleList<E> {
     // Вернуть true/false;
     boolean contains(E item);
 
+    boolean contains(int item);
+
     // Поиск элемента.
     // Вернуть индекс элемента
     // или -1 в случае отсутствия.

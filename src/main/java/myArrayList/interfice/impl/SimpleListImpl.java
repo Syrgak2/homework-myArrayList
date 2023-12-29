@@ -9,65 +9,58 @@ import java.util.Arrays;
 
 public class SimpleListImpl<E> implements SimpleList<E> {
 
-    private Object[] storage;
+    private E[] storage;
     private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
 
     public SimpleListImpl(int initCapacity) {
         if (initCapacity > 0) {
-            this.storage = new Object[initCapacity];
+            this.storage = (E[]) new Object[initCapacity];
         } else if (initCapacity == 0) {
-            this.storage = new Object[DEFAULT_CAPACITY];
+            this.storage = (E[]) new Object[DEFAULT_CAPACITY];
         } else {
             throw new IllegalArgumentException("передан не правильный размер " + initCapacity);
         }
     }
 
-    public SimpleListImpl(String[] storage) {
+    public SimpleListImpl(E[] storage) {
         if ((size = storage.length) != 0) {
-            this.storage = storage;
+            this.storage =storage;
         } else {
-            this.storage = new Object[DEFAULT_CAPACITY];
+            this.storage = (E[]) new Object[DEFAULT_CAPACITY];
         }
     }
 
     public SimpleListImpl() {
-        this.storage = new String[DEFAULT_CAPACITY];
+        this.storage = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
 
-    @SuppressWarnings("unchecked")
     private E getElementInE(int index) {
-        return (E) storage[index];
+        return storage[index];
     }
 
 
 //    увеличивает размер массива
-    private Object[] grow(int minGrowth) {
+    private E[] grow() {
         int oldCapacity = storage.length;
         if (oldCapacity > 0) {
-            int newCapacity = newLength(oldCapacity, minGrowth);
+            int newCapacity = (oldCapacity * 3) / 2 + 1;
+
             return storage = Arrays.copyOf(storage, newCapacity);
         } else {
-            return storage = new String[Math.max(DEFAULT_CAPACITY, minGrowth)];
+            return storage = (E[]) new Object[DEFAULT_CAPACITY];
         }
     }
 
-//  вычитывает новый размер массива
-    private int newLength(int oldCapacity, int minGrowth) {
-        int prefCapacity = (oldCapacity * 3) / 2 + 1;
-        int minCapacity = oldCapacity + minGrowth;
-        return Math.max(prefCapacity, minCapacity);
-    }
 
 
     //  Метод для удаления элемента по индексу
 //    Возвращает удаленный элемент
-    private E removeElement(Object[] array, int i) {
+    private E removeElement(E[] array, int i) {
         int newSize = size - 1;
 
-        @SuppressWarnings("unchecked")
-        E oldValue = (E)array[i];
+        E oldValue = array[i];
 
         if (newSize > i) {
             System.arraycopy(array, i + 1, array, i, newSize - i);
@@ -86,7 +79,7 @@ public class SimpleListImpl<E> implements SimpleList<E> {
         validateItem(item);
 
         if (size == storage.length) {
-            storage = grow(size + 10);
+            storage = (E[]) grow();
         }
 
         storage[size] = item;
@@ -95,20 +88,21 @@ public class SimpleListImpl<E> implements SimpleList<E> {
     }
 
     @Override
-    public E add(int index, E    item) {
+    public E add(int index, E item) {
         checkRangeIndex(index);
         validateItem(item);
 
-        final int s = size;
-        Object[] storage = this.storage;
+        if (size == storage.length) {
+            storage = grow();
+        }
+        if (index == size) {
+            storage[size ++] = item;
 
-        if (index == s) {
-            add(item);
         }
 
-        System.arraycopy(storage, index, storage, index + 1, s - index);
+        System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = item;
-        size = s + 1;
+        size += 1;
 
         return getElementInE(index);
     }
@@ -155,6 +149,18 @@ public class SimpleListImpl<E> implements SimpleList<E> {
 
         return indexOf(item) >= 0;
 
+    }
+
+    @Override
+    public boolean contains(int item) {
+        E[] arr =  storage;
+
+        if (size == 0) {
+            return false;
+        }
+
+        quickSort(arr, 0, size - 1);
+        return binarySearch(arr, item) >= 0;
     }
 
     @Override
@@ -231,17 +237,15 @@ public class SimpleListImpl<E> implements SimpleList<E> {
     @Override
     public void clear() {
         size = 0;
-        storage = new String[DEFAULT_CAPACITY];
+        storage = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public E[] toArray() {
-        @SuppressWarnings("unchecked")
-        E[] tmp = (E[]) Arrays.copyOf(storage, size);
-        return tmp;
+        return Arrays.copyOf(storage, size);
     }
 
-    private Integer[] sort(Integer[] array) {
+    public int[] selectionSort(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
             int minElementIndex = i;
             for (int j = i + 1; j < array.length; j++) {
@@ -257,19 +261,52 @@ public class SimpleListImpl<E> implements SimpleList<E> {
         return array;
     }
 
+    private void quickSort(E[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
 
-    private int binarySearch(Integer[] arr, int item) {
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+
+        }
+    }
+
+    private int partition(E[] arr, int begin, int end) {
+        Integer pivot = (Integer) arr[end];
+
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if ((Integer) arr[j] <= pivot) {
+                i++;
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+
+        return i + 1;
+    }
+
+    private void swapElements(E[] arr, Integer left, Integer right) {
+        E tmp =  arr[left];
+        arr[left] = arr[right];
+        arr[right] = tmp;
+    }
+
+
+    private int binarySearch(E[] arr, int item) {
         int min = 0;
-        int max = arr.length - 1;
+        int max = size - 1;
 
         while (min <= max) {
             int mid = (min + max) / 2;
 
-            if (item == arr[mid]) {
+            if (item == (Integer) arr[mid]) {
                 return mid;
             }
 
-            if (item < arr[mid]) {
+            if (item < (Integer) arr[mid]) {
                 max = mid - 1;
             } else {
                 min = mid + 1;

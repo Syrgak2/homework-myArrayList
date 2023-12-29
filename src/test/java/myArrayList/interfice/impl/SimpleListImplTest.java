@@ -179,11 +179,27 @@ public class SimpleListImplTest {
     @Test
     public void containsElement() {
 //        Given
-        Boolean excepted = true;
+        boolean excepted = true;
         simpleList.add(testValue);
 
 //        When
-        Boolean actual = simpleList.contains(testValue);
+        boolean actual = simpleList.contains(testValue);
+
+//        Then
+        Assertions.assertEquals(excepted, actual);
+    }
+
+    @Test
+    public void containsIntegerElement() {
+//        Given
+        boolean excepted = true;
+        SimpleList<Integer> integerList = new SimpleListImpl<>();
+        integerList.add(12);
+        integerList.add(22);
+        integerList.add(33);
+
+//        When
+        boolean actual = integerList.contains(12);
 
 //        Then
         Assertions.assertEquals(excepted, actual);
