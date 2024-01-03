@@ -271,5 +271,23 @@ public class SimpleListImplTest {
         Assertions.assertEquals(excepted, actual);
     }
 
+    @Test
+    public void binarySearch() {
+//        Given
+        SimpleList<Integer> integerSimpleList = new SimpleListImpl<>();
+        integerSimpleList.add(4);
+        integerSimpleList.add(3);
+        integerSimpleList.add(2);
+        integerSimpleList.sort();
+
+        int excepted = integerSimpleList.indexOf(2);
+
+//        When
+        int actual = integerSimpleList.binarySearch(2);
+
+//        Then
+        Assertions.assertEquals(excepted, actual);
+    }
+
 
 }
