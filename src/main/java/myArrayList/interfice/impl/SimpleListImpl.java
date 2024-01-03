@@ -152,18 +152,6 @@ public class SimpleListImpl<E> implements SimpleList<E> {
     }
 
     @Override
-    public boolean contains(int item) {
-        E[] arr =  storage;
-
-        if (size == 0) {
-            return false;
-        }
-
-        quickSort(arr, 0, size - 1);
-        return binarySearch(arr, item) >= 0;
-    }
-
-    @Override
     public int indexOf(E item) {
         validateItem(item);
 
@@ -245,20 +233,9 @@ public class SimpleListImpl<E> implements SimpleList<E> {
         return Arrays.copyOf(storage, size);
     }
 
-    public int[] selectionSort(int[] array) {
-        for (int i = 0; i < array.length - 1; i++) {
-            int minElementIndex = i;
-            for (int j = i + 1; j < array.length; j++) {
-                if (array[j] < array[minElementIndex]) {
-                    minElementIndex = j;
-                }
-            }
-
-            int tmp = array[i];
-            array[i] = array[minElementIndex];
-            array[minElementIndex] = tmp;
-        }
-        return array;
+    @Override
+    public void sort() {
+        quickSort(storage, 0, size-1);
     }
 
     private void quickSort(E[] arr, int begin, int end) {
@@ -267,7 +244,6 @@ public class SimpleListImpl<E> implements SimpleList<E> {
 
             quickSort(arr, begin, partitionIndex - 1);
             quickSort(arr, partitionIndex + 1, end);
-
         }
     }
 
@@ -295,18 +271,19 @@ public class SimpleListImpl<E> implements SimpleList<E> {
     }
 
 
-    private int binarySearch(E[] arr, int item) {
+    @Override
+    public int binarySearch(int item) {
         int min = 0;
         int max = size - 1;
 
         while (min <= max) {
             int mid = (min + max) / 2;
 
-            if (item == (Integer) arr[mid]) {
+            if (item == (Integer) storage[mid]) {
                 return mid;
             }
 
-            if (item < (Integer) arr[mid]) {
+            if (item < (Integer) storage[mid]) {
                 max = mid - 1;
             } else {
                 min = mid + 1;

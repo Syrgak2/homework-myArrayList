@@ -39,8 +39,6 @@ public interface SimpleList<E> {
     // Вернуть true/false;
     boolean contains(E item);
 
-    boolean contains(int item);
-
     // Поиск элемента.
     // Вернуть индекс элемента
     // или -1 в случае отсутствия.
@@ -73,8 +71,17 @@ public interface SimpleList<E> {
     // Удалить все элементы из списка.
     void clear();
 
+
+
     // Создать новый массив
     // из строк в списке
     // и вернуть его.
     E[] toArray();
+
+    // Сортирует массив
+    // Метод сортировки quickSort
+    void sort();
+
+
+    int binarySearch(int item);
 }
