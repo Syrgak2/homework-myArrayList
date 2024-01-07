@@ -71,8 +71,17 @@ public interface SimpleList<E> {
     // Удалить все элементы из списка.
     void clear();
 
+
+
     // Создать новый массив
     // из строк в списке
     // и вернуть его.
     E[] toArray();
+
+    // Сортирует массив
+    // Метод сортировки quickSort
+    void sort();
+
+
+    int binarySearch(int item);
 }
